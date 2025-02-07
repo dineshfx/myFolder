@@ -1,0 +1,43 @@
+
+
+
+<div class="wrapper">
+
+
+   
+ <div class="head">
+    <span style="text-align: center;color: white;cursor: pointer;display: block;"><a routerLink="../" style="color: white;">{{folder?.folderName}} folder</a></span> 
+
+    <div>
+       
+        <span class="fa fa-edit edit" style="color: white;font-size: 25px!important;margin-top: 1px;cursor: pointer;" (click)="onEdit()"></span>
+    </div>
+
+ </div>  
+   
+ @if (isLoading) {
+    <div class="spin-hold">
+
+        <div class="d-flex justify-content-center">
+            <div class="spinner-border text-primary" style="width: 10rem; height: 10rem; " role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+    </div>
+ }
+
+
+ @if (!isLoading) {
+    <div class="page">
+
+        <h3 class="page-title">{{file?.fileTitle}}</h3>
+        <div [innerHTML]="sanitizedContent"></div>
+
+
+    </div>
+}
+
+    <div class="footer-for-space"></div>
+
+
+</div>

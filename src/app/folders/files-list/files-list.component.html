@@ -1,0 +1,67 @@
+<span style="text-align: center;color: white;display: block;"><a [routerLink]="['/']" style="color: white;">{{filesList?.folderName}} folder</a></span>
+
+   
+
+
+<div class="files-list">
+
+<div class="btn-group">
+    
+    <a class="btn" [routerLink]="['/add-file',filesList?.folderId]">+ Add File</a>
+</div>
+
+
+<div cdkDropListGroup>
+    <div 
+ class="files"
+        cdkDropList
+        [cdkDropListData]="filesList?.files"
+        cdkDropListOrientation="vertical"
+        (cdkDropListDropped)="drop($event)"
+      
+    >
+@for (file of files; track file.fileId) {
+
+
+  
+
+    
+
+
+
+    <div class="file" cdkDrag>
+
+        <a [routerLink]="['/folder',filesList?.folderId,file.fileId]">
+
+        <div class="file-title">{{file.fileTitle}}</div>
+    </a>
+
+
+    <div class="file-action">
+
+    <div class="edit"  (click)="onEdit(filesList?.folderId, file.fileId)">
+        <i class="fa fa-edit"></i>
+    </div>
+
+    <div class="delete" (click)="onDelete(filesList?.folderId, file.fileId)">
+        <i class="fa fa-trash"></i>
+    </div>
+
+</div>
+
+    
+</div>
+
+
+
+
+}
+    </div>
+    </div>
+
+
+
+</div>
+
+
+

@@ -1,0 +1,37 @@
+<div class="folder">
+
+    <div class="card">
+
+<a [routerLink]="['folder/',folder.folderId]">
+ <div class="card-boby">     
+
+
+<div class="folder-title">{{folder.folderName}} </div>
+
+</div>  
+
+</a>
+
+<div class="card-actions">
+
+    <div class="icon1" (click)="onEdit(folder.folderId)">
+        <i class="fa fa-edit"></i>
+     </div>
+
+    <div class="icon" (click)="onClick(folder.id)">
+        <i class="fa fa-trash"></i>
+     </div>
+     
+ 
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+</div>

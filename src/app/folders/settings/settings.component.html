@@ -1,0 +1,20 @@
+<div class="contain">
+
+
+    <div class="actions">
+
+        <button class="btn btn-outline-success btn-lg" (click)="export()"> <i class="fa fa-file"></i> Export</button>
+        <button class="btn btn-outline-danger btn-lg mx-3" (click)="deleteDb()"> <i class="fa fa-trash"></i> Delete</button>
+
+        <hr />
+        <h2>Import Data</h2>
+
+        <!-- File Input with Template Reference Variable -->
+        <input type="file" #fileInput class="form-control">
+     
+ 
+        <button (click)="importFile(fileInput)" class="btn btn-outline-primary btn-lg">Import</button>
+
+    </div>
+
+</div>

@@ -1,0 +1,34 @@
+
+<div class="containers">
+
+    <span style="text-align: center;color: white;cursor: pointer;display: block;margin-bottom: 10px;"><a [routerLink]="['/folder',folder?.folderId]" style="color: white;">{{folderName}} folder</a></span>  
+
+    <form (ngSubmit)="onClick()">
+
+<div class="form">     
+
+<div class="control">
+    <label for="folderName">Title: </label> <br>
+    <input type="text" name="folderName" [(ngModel)]="fileTitle">
+</div>
+
+<div class="control">
+    <label for="folderName">contents: </label> <br>
+    <!-- <textarea type="text" name="contents" [(ngModel)]="contents"> </textarea> -->
+
+    <div id="summernote" ></div>
+    <!-- <textarea id="summernote"></textarea> -->
+
+
+
+</div>
+
+<div class="control">
+    <input type="submit" name="submit" class="btn">
+</div>
+
+</div> 
+
+    </form>
+
+</div>

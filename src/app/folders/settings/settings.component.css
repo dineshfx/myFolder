@@ -1,0 +1,23 @@
+.contain{
+
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    width: 100% ;
+}
+
+.actions{
+    width: 60%;
+ 
+}
+/* .btn{
+
+    color: white;
+    background-color: #34495e;
+} */
+
+.btn{
+    margin-top: 10px;
+}

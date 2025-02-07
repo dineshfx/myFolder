@@ -1,0 +1,21 @@
+<div class="buttons">
+    <button class="btn" (click)="move()">+ Add Folder</button>
+    <button class="btn" (click)="settings()"> <i class="fa fa-gear"></i> Settings </button>
+</div>
+
+<div cdkDropListGroup>
+    <div 
+        class="containers" 
+        cdkDropList
+        [cdkDropListData]="allData()"
+        cdkDropListOrientation="mixed"
+        (cdkDropListDropped)="drop($event)"
+      
+    >
+        @for (folder of allData(); track folder.folderId) {
+            <div class="folder-box" cdkDrag>
+                <app-folder [folder]="folder" (remainingFolders)="onDelete($event)"></app-folder>
+            </div>
+        }
+    </div>
+</div>
