@@ -91,3 +91,4 @@ app.on('activate', () => {
 
 app.disableHardwareAcceleration();
 
+

@@ -69,9 +69,20 @@ export class FoldersComponent {
     // Log to see the updated data
   
     // Update IndexedDB with the reordered data
-   await this.db.updateIndexedDb(updatedData);
-   console.log(this.allData());
 
+    //This is what slows down the drag and drop. so we are updating it in background
+  
+   this.updateDatabaseInBackground(updatedData);
+
+ 
+
+  }
+
+  updateDatabaseInBackground(updatedData: AppData[]) {
+    setTimeout(async () => {
+      await this.db.updateIndexedDb(updatedData)
+        .catch(error => console.error("IndexedDB update failed:", error));
+    }, 100); // Schedule in next event loop cycle
   }
 
 

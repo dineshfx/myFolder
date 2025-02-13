@@ -28,6 +28,7 @@ export class FilesListComponent {
   public filesList:any;
 
   public files:any;
+  public image:any;
 
     constructor(private dialog: MatDialog) {}
   
@@ -40,12 +41,40 @@ export class FilesListComponent {
         this.folderId = paramMap.get('folderId');
    
        this.filesList = await this.foldersServive.getAllFiles(this.folderId);
-       this.files = this.filesList.files;
-      // console.log(this.filesList)
+       this.files = this.filesList.files.map((file:any)=>{
+
+        file.thumbnail = this.extractFirstImageSrc(file.contents);
+        return file;
+
+       });
+
+     
+ 
+  
 
    
       }
     });
+  }
+
+  extractFirstImageSrc(htmlContent: string){
+    // Parse the HTML string into a document
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(htmlContent, 'text/html');
+  
+    // Query for the first <img> element
+    const firstImg = doc.querySelector('img');
+
+    console.log(firstImg)
+  
+    // Return the src attribute, or null if no image is found
+if(firstImg){
+  return firstImg ? firstImg.getAttribute('src') : null;
+}else{
+  return "https://developers.elementor.com/docs/assets/img/elementor-placeholder-image.png";
+}
+
+    
   }
 
     openAlert(message:any): void {
@@ -70,7 +99,12 @@ export class FilesListComponent {
         // Proceed with deleting the database
         console.log('User confirmed deletion.');
         this.filesList = await this.foldersServive.deleteFile(folderId,fileId);
-        this.files = this.filesList.files;
+        this.files = this.filesList.files.map((file:any)=>{
+
+          file.thumbnail = this.extractFirstImageSrc(file.contents);
+          return file;
+  
+         });
          this.openAlert("file deleted!");
         // this.yourService.deleteDatabase();
       } else {

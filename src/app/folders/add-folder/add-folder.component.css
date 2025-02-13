@@ -56,3 +56,8 @@ label{
     cursor: pointer;
 
 }
+
+[aria-hidden="true"] * {
+    pointer-events: none;
+    visibility: hidden;
+  }

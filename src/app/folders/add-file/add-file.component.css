@@ -62,4 +62,26 @@ textarea{
 .head{
     display: flex;
 }
+/* .note-editor.fullscreen {
+    z-index: 1050 !important;
+  }
+  
+  .modal-backdrop {
+    z-index: 1040 !important;
+  }
+  
+  .note-dialog,
+  .modal {
+    z-index: 1060 !important;
+  }
+   */
+  
 
+   .mat-dialog-container {
+    z-index: 99999 !important; /* Highest z-index */
+  }
+  
+  .cdk-overlay-container {
+    z-index: 99998 !important; /* Ensures backdrop is above Summernote */
+  }
+  

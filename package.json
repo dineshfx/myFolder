@@ -1,6 +1,7 @@
 {
   "name": "my-folders",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "dinesh",
   "main": "app.js",
   "scripts": {
     "ng": "ng",
@@ -11,6 +12,8 @@
     "electron": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win",
+    "release": "npm run build && npm run pack",
+    "dev": "npm run build && npm run electron",
     "electron-build": "electron-packager ./ myFoldersApp --platform=win32 --icon=assets/myIcon.ico --overwrite"
   },
   "private": true,
@@ -25,13 +28,13 @@
     "@angular/platform-browser": "^19.1.0",
     "@angular/platform-browser-dynamic": "^19.1.0",
     "@angular/router": "^19.1.0",
-    "@popperjs/core": "^2.11.8",
     "@types/jquery": "^3.5.32",
     "bootstrap": "^5.3.3",
     "electron-packager": "^17.1.2",
     "express": "^4.21.2",
     "http-server": "^14.1.1",
     "jquery": "^3.7.1",
+    "multer": "^1.4.5-lts.1",
     "rxjs": "~7.8.0",
     "summernote": "^0.9.1",
     "tslib": "^2.3.0",
@@ -55,6 +58,15 @@
   },
   "build": {
     "appId": "com.example.myFolders",
+    "extraResources": [
+      {
+        "from": "indexedDb/static",
+        "to": "indexedDb/static",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "win": {
       "icon": "assets/myIcon.ico"
     },

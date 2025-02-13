@@ -1,6 +1,19 @@
+
+   
+ @if (isLoading) {
+  <div class="spin-hold">
+
+      <div class="d-flex justify-content-center">
+          <div class="spinner-border text-primary" style="width: 10rem; height: 10rem; " role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+  </div>
+}
+
+@if(!isLoading){
+
 <div class="contain">
-
-
     <div class="actions">
 
         <button class="btn btn-outline-success btn-lg" (click)="export()"> <i class="fa fa-file"></i> Export</button>
@@ -18,3 +31,4 @@
     </div>
 
 </div>
+}

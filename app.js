@@ -1,13 +1,18 @@
-const { app, BrowserWindow,Menu ,shell ,dialog  } = require('electron');
+const { app, BrowserWindow,Menu ,shell ,dialog ,clipboard   } = require('electron');
 const { exec } = require('child_process'); // Use exec for command execution
 const path = require('path');
 const express = require('express');
 const fs = require('fs');
 const os = require('os');
 const crypto = require('crypto'); // For generating random filenames
+const multer = require('multer');
+
+
+
+
 
 let mainWindow;
-const serverPort = 3000; // Choose an available port 
+const serverPort = 3001; // Choose an available port 
 
 // Create the Express app
 const expressApp = express();
@@ -18,9 +23,73 @@ const angularDistPath = path.join(__dirname, 'dist', 'my-folders','browser');
 // Serve static files from the Angular dist folder
 expressApp.use(express.static(angularDistPath));
 
-// expressApp.get('/favicon.ico', (req, res) => {
-//     res.sendFile(path.join(angularDistPath, 'favicon.ico'));
-//   });
+
+
+const isPackaged = app.isPackaged;
+const videoDirectory = isPackaged 
+    ? path.join(process.resourcesPath, 'indexedDb/static')  // In packaged app
+    : path.join(__dirname, 'indexedDb/static'); // In development
+
+if (!fs.existsSync(videoDirectory)) {
+    fs.mkdirSync(videoDirectory, { recursive: true });
+}
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, videoDirectory);
+  },
+  filename: function (req, file, cb) {
+      const fileExt = path.extname(file.originalname); // Get the original file extension
+      const randomName = crypto.randomBytes(12).toString('hex'); // Generate a random string
+      cb(null, randomName + fileExt); // Save file with random name + original extension
+  }
+});
+
+// File filter to accept only video files
+const fileFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith('video/')) {
+      cb(null, true);
+  } else {
+      cb(new Error('Not a video file!'), false);
+  }
+};
+
+const upload = multer({ storage, fileFilter });
+
+expressApp.post('/upload-video', upload.single('video'), (req, res) => {
+  if (!req.file) {
+      return res.status(400).send({ message: 'No file uploaded or invalid file type' });
+  }
+
+  const fileUrl = `http://localhost:3000/videos/${req.file.filename}`;
+  
+  res.status(200).send({ 
+      message: 'File uploaded successfully', 
+      url: fileUrl 
+  });
+});
+
+
+//it also work
+//expressApp.use('/indexeddb/static', express.static(videoDirectory));
+
+// Ensure this route is before `expressApp.get('*', ...)`
+expressApp.get('/videos/:filename', (req, res) => {
+  const filePath = path.join(videoDirectory, req.params.filename);
+  console.log("Attempting to serve:", filePath);
+
+  if (fs.existsSync(filePath)) {
+      res.sendFile(filePath);
+  } else {
+      res.status(404).send("File not found");
+  }
+});
+
+
+
+
+
 
 // For any routes, send back the index.html file
 expressApp.get('*', (req, res) => {
@@ -31,6 +100,26 @@ expressApp.get('*', (req, res) => {
 const server = expressApp.listen(serverPort, () => {
   console.log(`Express server listening on port ${serverPort}`);
 });
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${serverPort} is already in use. Please close the existing process.`);
+    
+    // Show an error dialog in Electron
+    dialog.showErrorBox(
+      "Port Conflict",
+      `Port ${serverPort} is already in use. Please close the existing process and restart the app.`
+    );
+
+    // Quit Electron app after showing the error
+    app.quit();
+  } else {
+    console.error('❌ Server error:', err);
+  }
+});
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Create the Electron BrowserWindow after the server is up
 function createWindow() {
@@ -92,7 +181,28 @@ function createWindow() {
       label: 'Save Image As...',
       visible: isValidImage(params.srcURL),
       click: () => saveImage(params.srcURL)
-  }
+  },
+
+  {
+    label: 'Copy Link Address',
+    visible: params.linkURL && params.linkURL !== '',
+    click: () => clipboard.writeText(params.linkURL),
+  },
+
+  {
+    label: 'Copy Image Address',
+    visible: isValidImage(params.srcURL),
+    click: () => clipboard.writeText(params.srcURL),
+  },
+
+  {
+    label: 'Copy Video Address',
+    visible: params.mediaType === 'video',
+    click: () => clipboard.writeText(params.srcURL),
+  },
+
+
+  
       ]);
   
       menu.popup();
@@ -116,6 +226,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// app.commandLine.appendSwitch('disable-renderer-accessibility');
 
 function openImageWindow(imageUrl) {
 
@@ -289,57 +401,6 @@ function downloadImage(url, filePath) {
 
 
 
-// function handleImageOpening(imageUrl) {
-//   if (imageUrl.startsWith("data:image")) {
-//       // If it's a base64 data URL, save it as a temp file
-//       const filePath = saveBase64Image(imageUrl);
-//       openInChrome(`file://${filePath}`);
-//   } else {
-//       // Otherwise, open the normal image URL
-//       openInChrome(imageUrl);
-//   }
-// }
+/**=======================================================================================================================
+ * ==========================================================================================================================**/
 
-// function saveBase64Image(dataUrl) {
-//   const base64Data = dataUrl.split(",")[1]; // Extract base64 content
-//   const buffer = Buffer.from(base64Data, "base64");
-//   const tempDir = os.tmpdir();
-//   const filePath = path.join(tempDir, `image-${Date.now()}.png`);
-
-//   fs.writeFileSync(filePath, buffer);
-//   return filePath;
-// }
-
-// function openInChrome(imagePath) {
-//   const chromePath = getChromePath();
-
-//   if (!chromePath) {
-//       shell.openExternal(imagePath); // Open in default browser as fallback
-//       return;
-//   }
-
-//   const formattedPath = `"${imagePath}"`;
-
-//   let command;
-//   if (process.platform === "win32") {
-//       command = `"${chromePath}" ${formattedPath}`;
-//   } else {
-//       command = `open -a "${chromePath}" ${formattedPath}`;
-//   }
-
-//   exec(command, (error) => {
-//       if (error) {
-//           console.error("Failed to open image in Chrome:", error);
-//       }
-//   });
-// }
-
-// function getChromePath() {
-//   const chromePaths = {
-//       win32: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-//       darwin: "Google Chrome",
-//       linux: "/usr/bin/google-chrome"
-//   };
-
-//   return chromePaths[process.platform] || null;
-// }

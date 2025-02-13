@@ -15,21 +15,17 @@
     <div 
  class="files"
         cdkDropList
-        [cdkDropListData]="filesList?.files"
+        [cdkDropListData]="files"
         cdkDropListOrientation="vertical"
-        (cdkDropListDropped)="drop($event)"
-      
-    >
+        (cdkDropListDropped)="drop($event)">
 @for (file of files; track file.fileId) {
 
-
-  
-
-    
-
-
-
     <div class="file" cdkDrag>
+
+        <div class="file-thumbnail">
+            <img [src]="file.thumbnail" style="height:85px"  />
+        </div>
+        
 
         <a [routerLink]="['/folder',filesList?.folderId,file.fileId]">
 
@@ -48,14 +44,13 @@
     </div>
 
 </div>
-
-    
+  
 </div>
 
 
-
-
 }
+
+<div class="mt-2"></div>
     </div>
     </div>
 

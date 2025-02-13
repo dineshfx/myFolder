@@ -1,0 +1,28 @@
+.dialog-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    padding-bottom: 8px; /* Adds space below the title */
+  }
+  
+  .dialog-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between form fields */
+    padding: 15px 20px; /* Adjust padding for better spacing */
+  }
+  
+  .full-width {
+    width: 100%;
+  }
+  
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 20px;
+  }
+  
+  button {
+    font-weight: 500;
+  }
+  

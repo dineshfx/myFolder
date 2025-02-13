@@ -13,6 +13,7 @@ import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.comp
 export class SettingsComponent {
 
   private db:DbService = inject(DbService);
+  public isLoading = false;
 
   constructor(private dialog: MatDialog) {}
 
@@ -24,8 +25,16 @@ export class SettingsComponent {
   }
    export(){
 
+    this.isLoading = true;
+
     this.db.exportObjectStore('myFoldersDb', 'myFolders')
-    .then(() => console.log('Export successful'))
+    .then(() => {
+
+      this.isLoading = false;
+      
+      console.log('Export successful')
+    
+    })
     .catch((err) => console.error('Export failed', err));
 
   }
@@ -33,14 +42,19 @@ export class SettingsComponent {
 
 // Import function using template reference variable
 async importFile(fileInput: HTMLInputElement) {
+  this.isLoading = true;
   const file = fileInput.files?.[0];
   if (file) {
     await this.db.importObjectStore(file);
     console.log('Import started...');
     fileInput.value = ''; // Reset file input after import
+  
     this.openAlert("Db imported!");
+    this.isLoading = false;
+    
   }else{
     this.openAlert("Import file first");
+    this.isLoading = false;
   }
 }
 

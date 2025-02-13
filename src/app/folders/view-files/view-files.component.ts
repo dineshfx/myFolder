@@ -1,8 +1,9 @@
 import { Component, inject } from '@angular/core';
 
 
+
 import { FoldersServiceService } from '../folders-service.service';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router'; 
 import { AppData } from '../../Data/DataModal';
 import { DomSanitizer ,SafeHtml } from '@angular/platform-browser';
 
@@ -60,7 +61,6 @@ onEdit(){
 
 
 
-  
 
 }
 

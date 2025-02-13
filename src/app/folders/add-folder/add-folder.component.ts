@@ -25,6 +25,13 @@ export class AddFolderComponent {
 
 
   openAlert(message:any,route:any=[]): void {
+
+
+    // setTimeout(() => {
+    //   document.querySelectorAll('[aria-hidden="true"]').forEach(el => el.removeAttribute('aria-hidden'));
+    // }, 100);
+
+
     const dialogRef = this.dialog.open(AlertDialogComponent, {
       width: '300px',
       data: { message }
@@ -32,6 +39,13 @@ export class AddFolderComponent {
 
 if(route){
   dialogRef.afterClosed().subscribe(result => {
+
+    // setTimeout(() => {
+    //   document.querySelectorAll('[aria-hidden="true"]').forEach(el => el.removeAttribute('aria-hidden'));
+    // }, 100);
+
+
+
     if (result === 'ok') {
       this.router.navigate(route); // Navigate after the dialog is closed
     }
